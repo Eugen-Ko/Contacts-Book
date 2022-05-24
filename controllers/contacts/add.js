@@ -7,7 +7,7 @@ const addContact = async (req, res) => {
     status: "success",
     code: 201,
     data: {
-      result: result,
+      result,
     },
   });
 };
