@@ -1,6 +1,6 @@
 const contactsOperation = require("../../models/contacts");
 
-const getAllContact = async (req, res) => {
+const getAllContact = async (_, res) => {
   const contacts = await contactsOperation.listContacts();
   res.json({
     status: "success",
