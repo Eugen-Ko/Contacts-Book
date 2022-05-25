@@ -11,7 +11,7 @@ router.get("/", ctrlWrapper(ctrl.getAll));
 
 router.get("/:id", ctrlWrapper(ctrl.getById));
 
-router.post("/", validation(contactJoiSchema), ctrl.add);
+router.post("/", validation(contactJoiSchema), ctrlWrapper(ctrl.add));
 
 router.put("/:id", validation(contactJoiSchema), ctrlWrapper(ctrl.updateById));
 
