@@ -23,7 +23,10 @@ const userSchema = Schema(
       enum: ["starter", "pro", "business"],
       default: "starter",
     },
-    token: String,
+    token: {
+      type: String,
+      default: null,
+    },
   },
   {
     versionKey: false,
@@ -32,7 +35,6 @@ const userSchema = Schema(
 );
 
 userSchema.methods.comparePassword = function (password) {
-  console.log("afasdd");
   return bcrypt.compareSync(password, this.password);
 };
 
