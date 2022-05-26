@@ -45,9 +45,9 @@ const joiRegisterSchema = Joi.object({
     .rule({ message: "E-mail must be in the format (name)@(domen).(domen)" })
     .required(),
   password: Joi.string().min(6).required(),
-  subscription: Joi.string(),
-  // .valid("starter", "pro", "business")
-  // .default("starter"),
+  subscription: Joi.string()
+    .valid("starter", "pro", "business")
+    .default("starter"),
   token: Joi.string(),
 });
 
