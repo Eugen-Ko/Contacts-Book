@@ -13,7 +13,7 @@ router.post(
   ctrlWrapper(ctrl.register)
 );
 
-router.post("/login", validation(joiLoginSchema), ctrlWrapper(ctrl.login));
-router.get("/logout", auth, ctrlWrapper(ctrl.logout));
+router.get("/login", validation(joiLoginSchema), ctrlWrapper(ctrl.login));
+router.post("/logout", auth, ctrlWrapper(ctrl.logout));
 
 module.exports = router;
