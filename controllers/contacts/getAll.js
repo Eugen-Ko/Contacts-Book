@@ -2,10 +2,10 @@ const { Contact } = require("../../models");
 
 const getAll = async (req, res) => {
   const { _id } = req.user;
-  console.log(req.query);
-  const { page = 1, limit = 20 } = req.query;
+  const { favorite, page = 1, limit = 20 } = req.query;
+  const query = !favorite ? { owner: _id } : { owner: _id, favorite };
   const skip = (page - 1) * limit;
-  const result = await Contact.find({ owner: _id }, "", {
+  const result = await Contact.find(query, "", {
     skip,
     limit: Number(limit),
   }).populate("owner", "_id name email");
