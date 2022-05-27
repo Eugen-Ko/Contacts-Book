@@ -1,4 +1,4 @@
-const register = require("./register");
+const register = require("./register.js");
 const login = require("./login");
 const logout = require("./logout");
 
