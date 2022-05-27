@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { ctrlWrapper, auth, validation } = require("../../middlewares");
+const { auth, upload, validation, ctrlWrapper } = require("../../middlewares");
 
 const router = express.Router();
 const { users: ctrl } = require("../../controllers");
@@ -14,5 +14,11 @@ router.get(
 );
 
 router.patch("/", auth, ctrlWrapper(ctrl.updateSubscription));
+router.patch(
+  "/avatars",
+  auth,
+  upload.single("avatar"),
+  ctrlWrapper(ctrl.updateAvatar)
+);
 
 module.exports = router;
