@@ -52,6 +52,7 @@ const joiRegisterSchema = Joi.object({
 });
 
 const joiLoginSchema = Joi.object({
+  name: Joi.string(),
   email: Joi.string()
     .email({ minDomainSegments: 2 })
     .rule({ message: "E-mail must be in the format (name)@(domen).(domen)" })
