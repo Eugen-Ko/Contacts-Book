@@ -8,6 +8,7 @@ const updateSubscription = async (req, res) => {
     { subscription },
     { runValidators: true }
   );
+
   const { name, email } = result;
   res.json({
     status: "success",
