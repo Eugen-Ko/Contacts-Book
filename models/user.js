@@ -27,10 +27,10 @@ const userSchema = Schema(
       type: String,
       default: null,
     },
-    // avatarURL: {
-    //   type: String,
-    //   required: true,
-    // },
+    avatarURL: {
+      type: String,
+      required: true,
+    },
   },
   {
     versionKey: false,
@@ -53,6 +53,7 @@ const joiRegisterSchema = Joi.object({
     .valid("starter", "pro", "business")
     .default("starter"),
   token: Joi.string(),
+  // avatarURL: Joi.string().required(),
 });
 
 const joiLoginSchema = Joi.object({

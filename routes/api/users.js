@@ -4,12 +4,12 @@ const { auth, upload, validation, ctrlWrapper } = require("../../middlewares");
 
 const router = express.Router();
 const { users: ctrl } = require("../../controllers");
-const { joiRegisterSchema } = require("../../models");
+const { joiLoginSchema } = require("../../models");
 
 router.get(
   "/current",
   auth,
-  validation(joiRegisterSchema),
+  validation(joiLoginSchema),
   ctrlWrapper(ctrl.getCurrent)
 );
 
