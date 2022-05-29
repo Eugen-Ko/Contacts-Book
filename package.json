@@ -1,6 +1,6 @@
 {
   "name": "nodejs-contacts",
-  "version": "0.0.0",
+  "version": "1.22.19",
   "private": false,
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bin/server.js",
