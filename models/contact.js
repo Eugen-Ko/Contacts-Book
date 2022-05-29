@@ -50,5 +50,4 @@ const favoriteJoiSchema = Joi.object({
 });
 
 const Contact = model("contact", contactSchema);
-
 module.exports = { Contact, contactJoiSchema, favoriteJoiSchema };
