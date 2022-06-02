@@ -1,121 +1,60 @@
-// const express = require("express");
-// const request = require("supertest");
-// const mongoose = require("mongoose");
-// require('dotenv').config();
-const login = require("../controllers/auth/login");
-const { Unauthorized } = require("http-errors");
+const express = require("express");
+const request = require("supertest");
+const jwt = require("jsonwebtoken");
+
+
 const { User } = require("../models");
+const login = require("../controllers/auth/login");
 
-// const { DB_HOST, PORT = 3000 } = process.env;
 
-// const app = express();
-// const server = app.listen(PORT);
-// mongoose.connect(DB_HOST);
+const req = {
+  body: {
+    email: "q2@qqq.com",
+    password: "222222",
+  }
 
-// app.get('/api/auth/login', login);
+}
+const res = {};
+
+const app = express();
+app.get("/api/auth/login", login(req, res));
 
 describe('Test User login', () => {
-  // beforeAll(() => server);
-  // afterAll(() => process.on('SIGINT', () => {
-  //   server.close(() => {
-  //     process.exit();
-  //   });
-  // }));
+  beforeAll(() => {
+    app.listen(3000);
+    const mockUser = {
+      _id: "62911fa6590927e2c229f3d3",
+      name: 'qqqqq2',
+      email: 'q2@qqq.com',
+      password: '$2a$10$HYGYAHbQ8pu60EKzdvzvM.ngMK8M6I28jmzFliAYCi4Dcxnwqrk16',
+      subscription: 'starter',
+      token: null,
+      avatarURL: 'public/avatars/62911fa6590927e2c229f3d3_beer.jpg',
 
-  it("Return status 200 with correct data", async () => {
-    const mockReq = {
-      body: {
-        email: "q2@qqq.com",
-        password: "222222",
-      }
+      comparePassword: jest.fn(() => true),
+    };
 
-    }
-    const mockRes = {};
+    const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTExZmE2NTkwOTI3ZTJjMjI5ZjNkMyIsImlhdCI6MTY1NDAyMjk0NiwiZXhwIjoxNjU0MDI2NTQ2fQ.46_JxCOsBS8QvquzR_nLVSVm5RuxnvcbS-EpMMtRRBY';
 
-    jest.spyOn(User, 'findOne', 'findByIdAndUpdate')
-      .mockImplementationOnce(() => { });
+    jest.spyOn(User, 'findOne').mockImplementationOnce(() => mockUser);
+    jest.spyOn(jwt, 'sign').mockImplementationOnce(() => mockToken);
+    jest.spyOn(User, 'findByIdAndUpdate').mockImplementationOnce(async () => { return ({ ...mockUser, token: mockToken }) });
 
-    // const response = await request(app)
-    // .get(login(mockReq, mockRes));
+  });
+  afterAll(() => process.close(0));
 
+  test("Return status 200 with correct data", async () => {
+    const response = await request(app).get("/api/auth/login");
+    expect(response.status).toBe(200);
+  });
 
-  })
+  test("Check token, email, subscription", async () => {
+    const response = await login(req, res);
+    expect(response.data.token).toBeDefined();
+    expect(response.data.user).toContainAllKeys(['mail', 'subscription']);
+    expect(response.data.user.email).toBeString();
+    expect(response.data.user.subscription).toBeString();
+  });
 
 });
-
-
-
-// --------------------3 ---------------------
-// const request = require("supertest");
-// const express = require("express");
-
-// const app = express();
-// const server = require("../../bin/server");
-// // const app = require("../../app");
-// const login = require("./login");
-
-// describe("Test example", () => {
-//   beforeAll(() => server);
-//   test("GET /", async () => {
-//     request(app)
-//       .get("/api/auth/login", login)
-//       .send({
-//         email: "q2@qqq.com",
-//         password: "222222"
-//       })
-//       .expect(200)
-//     // More logic goes here
-//   });
-//   // More things come here
-// });
-
-// ------------------2 -----------------------
-// const express = require("express");
-
-// const server = require("../../bin/server");
-// // const app = require('../../app');
-
-// const app = express();
-// const login = require("./login");
-
-// describe("Test example", () => {
-  // beforeAll(() => server);
-//   // More things come here
-//   test("GET /api/auth/login", (done) => {
-//     request(app)
-//       .get("/api/auth/login", login)
-      // .send({
-      //   email: "q2@qqq.com",
-      //   password: "222222"
-      // })
-//       .expect(200)
-//       .expect((res) => { console.log(res.body) });
-//     // Logic goes here
-//   });
-// });
-
-// const express = require("express");
-// const mongoose = require("mongoose");
-// // const app = require("../app");
-// require('dotenv').config();
-// const server = require("../../bin/server");
-// const login = require("./login");
-// const { DB_HOST, PORT = 3000 } = process.env;
-
-// const app = express();
-
-// describe("test login controller", () => {
-//   beforeAll(() => server);
-//   afterAll(() => server.close(0));
-//   test("login", async () => {
-//     const response = await request(app)
-//       .get("/api/auth/login", login)
-//       .send({
-//         email: "q2@qqq.com",
-//         password: "222222"
-//       });
-//     console.log("status: ", response.status);
-//     expect(response.status).toBe(200);
-//   });
-// });
 
