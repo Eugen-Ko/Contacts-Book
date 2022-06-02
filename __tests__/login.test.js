@@ -2,26 +2,24 @@ const express = require("express");
 const request = require("supertest");
 const jwt = require("jsonwebtoken");
 
+require('dotenv').config();
+const PORT = process.env.PORT || 3000;
+
+
 
 const { User } = require("../models");
 const login = require("../controllers/auth/login");
 
-
-const req = {
-  body: {
-    email: "q2@qqq.com",
-    password: "222222",
-  }
-
-}
-const res = {};
-
 const app = express();
-app.get("/api/auth/login", login(req, res));
+app.use(express.json());
+app.get("/api/auth/login", login);
+const server = app.listen(PORT);
+
 
 describe('Test User login', () => {
   beforeAll(() => {
-    app.listen(3000);
+    () => server;
+
     const mockUser = {
       _id: "62911fa6590927e2c229f3d3",
       name: 'qqqqq2',
@@ -41,19 +39,39 @@ describe('Test User login', () => {
     jest.spyOn(User, 'findByIdAndUpdate').mockImplementationOnce(async () => { return ({ ...mockUser, token: mockToken }) });
 
   });
-  afterAll(() => process.close(0));
+  afterAll(() => server.close());
 
   test("Return status 200 with correct data", async () => {
-    const response = await request(app).get("/api/auth/login");
-    expect(response.status).toBe(200);
+    const res = await request(app)
+      .get("/api/auth/login")
+      .send({
+        email: "q2@qqq.com",
+        password: "222222",
+      })
+    expect(res.status).toBe(200);
   });
 
-  test("Check token, email, subscription", async () => {
-    const response = await login(req, res);
-    expect(response.data.token).toBeDefined();
-    expect(response.data.user).toContainAllKeys(['mail', 'subscription']);
-    expect(response.data.user.email).toBeString();
-    expect(response.data.user.subscription).toBeString();
+  test("Checking if the token field exists", async () => {
+    const res = await request(app)
+      .get("/api/auth/login")
+      .send({
+        email: "q2@qqq.com",
+        password: "222222",
+      })
+    expect(res.body.data.token).toBeDefined();
+  });
+
+  test("Checking if the user object exists", async () => {
+    const res = await request(app)
+      .get("/api/auth/login")
+      .send({
+        email: "q2@qqq.com",
+        password: "222222",
+      })
+    expect(res.body.data.user).toHaveProperty('email');
+    expect(res.body.data.user).toHaveProperty('subscription');
+    expect(typeof res.body.data.user.email).toBe("string");
+    expect(typeof res.body.data.user.subscription).toBe("string");
   });
 
 });

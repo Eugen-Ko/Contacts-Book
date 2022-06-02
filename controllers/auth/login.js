@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../../models");
 
 const { SECRET_KEY } = process.env;
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -17,17 +18,20 @@ const login = async (req, res) => {
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
   const { email: resEmail, subscription } = await User.findByIdAndUpdate(user._id, { token });
-  return res.json({
-    status: 'success',
-    code: 200,
-    data: {
-      user: {
-        email: resEmail,
-        subscription,
-      },
-      token,
-    },
-  });
+
+  res.json(
+    {
+      status: 'success',
+      code: 200,
+      data: {
+        user: {
+          email: resEmail,
+          subscription,
+        },
+        token,
+      }
+    }
+  );
 };
 
 module.exports = login;
