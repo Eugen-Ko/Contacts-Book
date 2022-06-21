@@ -31,11 +31,20 @@ const userSchema = Schema(
       type: String,
       required: true,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, 'Verify token is required'],
+    }
   },
   {
     versionKey: false,
     timestamps: true,
   }
+
 );
 
 userSchema.methods.comparePassword = function (password) {
@@ -66,6 +75,13 @@ const joiLoginSchema = Joi.object({
   token: Joi.string(),
 });
 
+const joiResendSchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2 })
+    .rule({ message: "E-mail must be in the format (name)@(domen).(domen)" })
+    .required(),
+})
+
 const User = model("user", userSchema);
 
-module.exports = { User, joiRegisterSchema, joiLoginSchema };
+module.exports = { User, joiRegisterSchema, joiLoginSchema, joiResendSchema };
